@@ -30,11 +30,11 @@ body {
   
   .modal {
     padding: 20px 30px;
-    width: 70vw;
-    max-height: 60vh;
+    width: 320px;
+    max-height: 175px;
     overflow-y: auto;
     position: relative;
-    min-height: 300px;
+    min-height: 130px;
     margin: 5% auto 0;
     background: #fff;
     z-index: 9999;
