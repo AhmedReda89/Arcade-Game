@@ -8,10 +8,11 @@ var Enemy = function() {
     this.sprite = 'images/enemy-bug.png';
     this.initialLocationx = Math.random()*400;
     this.initialLocationy = Math.floor(Math.random() * (220 - 80) ) + 50;
-    this.location;
     this.speed = 1 + Math.random();
     this.x = this.initialLocationx;
     this.y = this.initialLocationy;
+    this.width = 75;
+    this.height = 75;
 };
 
 // Update the enemy's position, required method for game
@@ -24,17 +25,18 @@ Enemy.prototype.update = function(dt) {
     // To move the enemies 
     this.x += dt+1*this.speed;
 
-    // To check for collision 
-    allEnemies.forEach(function(a){
-        if (a.x < player.x + player.width &&
-            a.x + a.width > player.x &&
-            a.y < player.y + b.height &&
-            a.y + a.height > player.y){
-                gameOver();
-            };
-    });
-    
+    this.checkCollisions();
 };
+
+Enemy.prototype.checkCollisions = function(){
+    // To check for collision 
+    if (player.x < this.x + this.width &&
+        player.x + player.width > this.x &&
+        player.y < this.y + this.height &&
+        player.y + player.height > this.y){
+            gameOver();
+        };
+}
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -48,18 +50,31 @@ var player = function(){
     this.sprite = 'images/char-boy.png';
     this.x = 200;
     this.y = 400;
+    this.width = 70;
+    this.height = 70;
     this.handleInput = function(key){
         switch (key) {
             case 'left':
+              if(this.x > 10)
               this.x -= 50;
               break;
+
             case 'up':
-              this.y -= 50;
+              if(this.y > 0){
+                this.y -= 50;
+              }
+              else{
+                  winGameOver();
+              }
               break;
+              
             case 'right':
+              if(this.x < 400)
               this.x += 50;
               break;
+
             case 'down':
+              if(this.y < 450)
               this.y += 50;
               break;
           }
@@ -115,7 +130,40 @@ document.addEventListener('keyup', function(e) {
 });
 
 function gameOver(){
-    reset();[]
-    var gameEndMsg = document.getElementsByName('game-end');
-    gameEndMsg.style.display = "block";
+    //alert('Game Over');
+    openModal("lose");
 }
+function winGameOver(){
+    //alert('You Win!');
+    openModal("win");
+}
+
+
+class Modal {
+    constructor(overlay) {
+      this.overlay = overlay;
+      const closeButton = overlay.querySelector('.button-close')
+      closeButton.addEventListener('click', this.close.bind(this));
+      overlay.addEventListener('click', e => {
+        if (e.srcElement.id === this.overlay.id) {
+          this.close();
+        }
+      });
+    }
+    open(res) {
+      this.overlay.classList.remove('is-hidden');
+      var status = document.querySelector('.modal .content h3');
+      if(res == 'win'){
+        status.innerHTML = "You Win!";
+      }else if(res == 'lose'){
+        status.innerHTML = "You Lose!";
+      }
+    }
+  
+    close() {
+      this.overlay.classList.add('is-hidden');
+    }
+  }
+  const modal = new Modal(document.querySelector('.modal-overlay'));
+  window.openModal = modal.open.bind(modal);
+  //window.openModal();
