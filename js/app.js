@@ -6,11 +6,12 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.initialLocation = Math.random()*100;
+    this.initialLocationx = Math.random()*400;
+    this.initialLocationy = Math.floor(Math.random() * (220 - 80) ) + 50;
     this.location;
-    this.speed = (1000 + Math.random()*1000);
-    this.x = 100;
-    this.y = 60;
+    this.speed = 1 + Math.random();
+    this.x = this.initialLocationx;
+    this.y = this.initialLocationy;
 };
 
 // Update the enemy's position, required method for game
@@ -19,6 +20,19 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
+    // To move the enemies 
+    this.x += dt+1*this.speed;
+
+    // To check for collision 
+    allEnemies.forEach(function(a){
+        if (a.x < player.x + player.width &&
+            a.x + a.width > player.x &&
+            a.y < player.y + b.height &&
+            a.y + a.height > player.y){
+                gameOver();
+            };
+    });
     
 };
 
@@ -49,11 +63,27 @@ var player = new player();
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var enemy1 = new Enemy();
-var enemy2 = new Enemy();
 var allEnemies = [];
-allEnemies.push(enemy1);
-allEnemies.push(enemy2);
+var enemy1 = new Enemy();
+    var enemy2 = new Enemy();
+    var enemy3 = new Enemy();
+    var enemy4 = new Enemy();
+    allEnemies.push(enemy1);
+    allEnemies.push(enemy2);
+    allEnemies.push(enemy3);
+    allEnemies.push(enemy4);
+
+setInterval(function(){
+
+    var enemy1 = new Enemy();
+    var enemy2 = new Enemy();
+    var enemy3 = new Enemy();
+    allEnemies.push(enemy1);
+    allEnemies.push(enemy2);
+    allEnemies.push(enemy3);
+    enemy1.x = enemy2.x = enemy3.x = Math.random()*(-150);
+
+},4000)
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -67,3 +97,9 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+function gameOver(){
+    allEnemies = [];
+    var gameEndMsg = document.getElementsByName('game-end');
+    gameEndMsg.style.display = "block";
+}
