@@ -125,8 +125,9 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
-    player.handleInput(allowedKeys[e.keyCode]);
+    if(modal && !modal.opened){
+        player.handleInput(allowedKeys[e.keyCode]);
+    }
 });
 
 function gameOver(){
@@ -142,6 +143,7 @@ function winGameOver(){
 class Modal {
     constructor(overlay) {
       this.overlay = overlay;
+      this.opened = false;
       const closeButton = overlay.querySelector('.button-close')
       closeButton.addEventListener('click', this.close.bind(this));
       overlay.addEventListener('click', e => {
@@ -152,18 +154,28 @@ class Modal {
     }
     open(res) {
       this.overlay.classList.remove('is-hidden');
+      this.opened = true;
       var status = document.querySelector('.modal .content h3');
       if(res == 'win'){
         status.innerHTML = "You Win!";
+        gameReset();
       }else if(res == 'lose'){
         status.innerHTML = "You Lose!";
+        gameReset();
       }
     }
   
     close() {
       this.overlay.classList.add('is-hidden');
+      this.opened = false;
     }
   }
   const modal = new Modal(document.querySelector('.modal-overlay'));
   window.openModal = modal.open.bind(modal);
   //window.openModal();
+
+function gameReset(){
+    allEnemies = [];
+    player.x = 200;
+    player.y = 400;
+};
