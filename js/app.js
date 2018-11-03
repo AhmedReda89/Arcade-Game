@@ -80,7 +80,9 @@ var player = function () {
         }
     };
 };
+player.prototype.update = function () {
 
+};
 player.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
