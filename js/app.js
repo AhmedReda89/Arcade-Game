@@ -48,6 +48,22 @@ var player = function(){
     this.sprite = 'images/char-boy.png';
     this.x = 200;
     this.y = 400;
+    this.handleInput = function(key){
+        switch (key) {
+            case 'left':
+              this.x -= 50;
+              break;
+            case 'up':
+              this.y -= 50;
+              break;
+            case 'right':
+              this.x += 50;
+              break;
+            case 'down':
+              this.y += 50;
+              break;
+          }
+    };
 };
 
 player.prototype.update = function(dt){
@@ -99,7 +115,7 @@ document.addEventListener('keyup', function(e) {
 });
 
 function gameOver(){
-    allEnemies = [];
+    reset();[]
     var gameEndMsg = document.getElementsByName('game-end');
     gameEndMsg.style.display = "block";
 }
